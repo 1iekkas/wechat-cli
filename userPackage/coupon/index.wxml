@@ -1,0 +1,52 @@
+<!--userPackage/coupon/index.wxml-->
+<view class="container">
+  <van-tabs color="#FF3D00" swipeable sticky active="{{active}}" offset-top="0" bind:click="changeTabs">
+    <van-tab wx:for="{{tabs}}" wx:key="index" name="{{item.id}}" title="{{item.name}}"></van-tab>
+  </van-tabs>
+
+  <scroll-view scroll-y refresher-enabled refresher-triggered="{{triggered}}" bindrefresherrefresh="onRefresh"
+    bindrefresherrestore="onRestore" bindrefresherabort="onAbort" style="height: calc(100vh - 88rpx)"
+    bindscrolltolower="lower">
+    <view class="content" style="min-height: calc(100vh - 80rpx)">
+      <block wx:if="{{!list.length && !loading && !triggered}}">
+        <van-empty image="search" description="你还没领取到优惠券哦" />
+      </block>
+
+      <block wx:else>
+        <view class="coupon-body">
+          <van-cell-group border="{{false}}">
+            <van-cell title-width="192rpx" wx:for="{{list}}" wx:key="index" custom-class="coupon" border="{{false}}"
+              clickable data-name="{{index}}" bind:click="onSelectCoupon">
+              <view slot="title" class="coupon-head">
+                <view class="coupon-amount">
+                  {{item.value}}<text>元</text>
+                </view>
+                <view class="coupon-condition">
+                  <block wx:if="{{item.rule_money}}">满{{item.rule_money}}元可用</block>
+                  <block wx:else>无使用门槛</block>
+                </view>
+              </view>
+              <view class="coupon-info">
+                <view class="coupon-name">{{item.title}}</view>
+                <view class="coupon-desc">
+                  <block wx:if="{{item.rule_time}}">
+                    有效期: {{item.rule_time}}
+                  </block>
+                  <block wx:else>
+                    有效期: 永久
+                  </block>
+                </view>
+              </view>
+            </van-cell>
+          </van-cell-group>
+        </view>
+      </block>
+      <block wx:if="{{loading}}">
+        <view class="list-loading">
+          <van-loading />
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+
+</view>
